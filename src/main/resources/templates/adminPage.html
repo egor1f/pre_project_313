@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>ALL USERS</title>
+    <style>
+        body {
+            background-color: #222222;
+            color: #FFFFFF;
+            font-family: 'Raleway', ExtraBold, sans-serif;
+            margin: 20px;
+            padding: 20px;
+            display: table;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        a {
+            color: #FFFFFF; /* для ссылок */
+        }
+
+        a:visited {
+            color: #FFFFFF; /* для посещенных ссылок */
+        }
+
+        a:hover {
+            color: #EAEAEA; /* при наведении курсора */
+        }
+
+    </style>
+</head>
+<body>
+<table border="1" cellpadding="5">
+    <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Age</th>
+        <th>Number</th>
+        <th>Role</th>
+        <th>Edit</th>
+        <th>Delete</th>
+    </tr>
+    <tr th:each="user : ${users}">
+        <td th:text="${user.id}"></td>
+        <td th:text="${user.name}"></td>
+        <td th:text="${user.age}"></td>
+        <td th:text="${user.number}"></td>
+        <td th:text="${user.getRoles()}"></td>
+
+        <td>
+            <a th:href="'/edit_user?id=' + ${user.id}">Edit</a>
+        </td>
+
+        <td>
+            <a th:href="'/delete_user?id=' + ${user.id}">Delete</a>
+        </td>
+    </tr>
+</table>
+<br>
+<h3><a th:href="@{/add_user}">New User</a></h3>
+</body>
+</html>
