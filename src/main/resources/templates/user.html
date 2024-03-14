@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
 <head>
-    <title>Spring Security Example</title>
+    <meta charset="UTF-8">
+    <title>User profile</title>
     <style>
         body {
             background-color: #222222;
@@ -30,8 +31,24 @@
     </style>
 </head>
 <body>
-<h1>User, welcome spring boot security page!</h1>
-
-
+<h3>User ID: <span th:text="${user.id}"/></h3>
+<p>
+    User Name:
+    <a th:text="${user.getName()}"></a><br/>
+    <br>
+    Age:
+    <a th:text="${user.getAge()}"></a>
+    <br><br>
+    Number:
+    <a th:text="${user.getNumber()}"></a><br/>
+    <br>
+    Role:
+    <tr th:each="role : ${user.getRoles()}">
+        <td th:text="${role.getName()}"></td>
+    </tr>
+</p>
+<form th:method="POST" th:action="@{/logout}">
+    <input type="submit" value="Logout">
+</form>
 </body>
 </html>

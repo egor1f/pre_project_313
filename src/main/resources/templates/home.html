@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
 <head>
     <meta charset="UTF-8">
-    <title>Гостевая страница</title>
+    <title>Home page</title>
     <style>
         body {
             background-color: #222222;
@@ -38,5 +38,12 @@
     Для юзера: user user
 </p>
 <a href="/login" >Авторизоваться</a>
+
+<br><br>
+
+<form th:method="POST" th:action="@{/logout}">
+    <input type="submit" value="Logout">
+</form>
+
 </body>
 </html>

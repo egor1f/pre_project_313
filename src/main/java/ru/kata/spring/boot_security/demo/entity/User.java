@@ -42,6 +42,7 @@ public class User implements UserDetails {
     private String number;
 
     @Column(name = "password", nullable = false)
+    @Size(min = 6, message = "Min 6 symbol")
     private String password;
 
     @ManyToMany(fetch = FetchType.LAZY)
@@ -54,10 +55,11 @@ public class User implements UserDetails {
     public User() {
     }
 
-    public User(String name, int age, String number) {
+    public User(String name, int age, String number, String password) {
         this.name = name;
         this.age = age;
         this.number = number;
+        this.password = password;
     }
 
     @Override
@@ -81,22 +83,22 @@ public class User implements UserDetails {
 
     @Override
     public boolean isAccountNonExpired() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean isEnabled() {
-        return false;
+        return true;
     }
 
     public int getId() {

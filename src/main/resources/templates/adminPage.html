@@ -49,15 +49,20 @@
         <td th:text="${user.getRoles()}"></td>
 
         <td>
-            <a th:href="'/edit_user?id=' + ${user.id}">Edit</a>
+            <a th:href="@{admin/edit_user (id=${user.getId()})}">Edit</a>
         </td>
 
         <td>
-            <a th:href="'/delete_user?id=' + ${user.id}">Delete</a>
+            <a th:href="'/admin/delete_user?id=' + ${user.id}">Delete</a>
         </td>
     </tr>
 </table>
 <br>
-<h3><a th:href="@{/add_user}">New User</a></h3>
+<h3><a th:href="@{admin/add_user}">New User</a></h3>
+
+<form th:method="POST" th:action="@{/logout}">
+    <input type="submit" value="Logout">
+</form>
+
 </body>
 </html>

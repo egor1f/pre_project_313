@@ -32,7 +32,7 @@
 </head>
 <body>
 <h2>Edit User </h2>
-<form action="/edit_user" method="POST" th:object="${user}">
+<form action="#" th:action="@{/admin/{id}/edit_user(id = ${user.getId()})}" th:object="${user}" th:method="post">
     <!-- Скрытое поле для передачи идентификатора пользователя -->
     <input type="hidden" th:field="*{id}">
     <label for="name">Name:</label>
@@ -49,9 +49,26 @@
     <br>
     <input th:field="*{number}" type="text" id="number" >
     <span th:if="${#fields.hasErrors('number')}" th:errors="*{number}"></span>
+    <br><br>
+    <label for="password">Password:</label>
     <br>
-    <br>
+    <input th:field="*{password}" type="text" id="password" >
+    <span th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></span>
+    <br><br>
+    <label>Role:
+        <input type="checkbox" name="roles"
+               th:each="role : ${roles}"
+               th:value="${role.getId()}"
+               th:text="${role.getName()}"
+               th:checked="${#lists.contains(user.roles, role)}"
+        />
+    </label>
+    <br><br>
     <button type="submit">Submit</button>
+</form>
+<br/>
+<form th:method="POST" th:action="@{/logout}">
+    <input type="submit" value="Logout">
 </form>
 </body>
 </html>

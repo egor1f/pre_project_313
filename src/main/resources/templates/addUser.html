@@ -32,24 +32,38 @@
 </head>
 <body>
 <h2>Add User </h2>
-<form action="/add_user" method="POST" th:object="${user}">
+<form action="#" th:action="@{/admin/add_user}" th:object="${user}" th:method="post">
     <label for="name">Name:</label>
     <br>
     <input th:field="*{name}" type="text" id="name">
-    <span th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></span>
+    <span th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="error"></span>
     <br><br>
     <label for="age">Age:</label>
     <br>
     <input th:field="*{age}" type="number" id="age" >
-    <span th:if="${#fields.hasErrors('age')}" th:errors="*{age}"></span>
+    <span th:if="${#fields.hasErrors('age')}" th:errors="*{age}" class="error"></span>
     <br><br>
     <label for="number">Phone:</label>
     <br>
     <input th:field="*{number}" type="text" id="number" >
-    <span th:if="${#fields.hasErrors('number')}" th:errors="*{number}"></span>
+    <span th:if="${#fields.hasErrors('number')}" th:errors="*{number}" class="error"></span>
+    <br><br>
+    <label for="password">Password:</label>
     <br>
+    <input th:field="*{password}" type="text" id="password" >
+    <span th:if="${#fields.hasErrors('password')}" th:errors="*{password}" class="error"></span>
+    <br><br>
+    <label>Role:</label>
+    <div>
+        <label><input type="checkbox" name="roles" value="2"> User</label>
+        <label><input type="checkbox" name="roles" value="1"> Admin</label>
+    </div>
     <br>
     <button type="submit">Submit</button>
+</form>
+<br/>
+<form th:method="POST" th:action="@{/logout}">
+    <input type="submit" value="Logout">
 </form>
 </body>
 </html>

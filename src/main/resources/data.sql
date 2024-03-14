@@ -25,10 +25,10 @@ create table if not exists user_roles
 );
 
 insert into user_312 (name, age, number, password)
-values ('admin', '20', 'admin', 'admin');
+values ('admin', '20', 'admin', '$2y$10$gL55G6i9Oq.cii1/wVL1g.iGxglm5HsfGI9B5p.PmmdusTVDoWSiq');
 
 insert into user_312 (name, age, number, password)
-values ('user', '20', 'user', 'user');
+values ('user', '20', 'user', '$2y$10$F15vn213tGuaj2wxZevqHumymATjv36BV1BHQ5dm.D/A7qLCaMb7u');
 
 insert into roles (role_name)
 values ('ROLE_ADMIN'),
