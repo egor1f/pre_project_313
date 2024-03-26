@@ -11,7 +11,6 @@ import ru.kata.spring.boot_security.demo.service.RoleServiceImpl;
 import ru.kata.spring.boot_security.demo.service.UserServiceImpl;
 
 import javax.validation.Valid;
-import java.util.Objects;
 import java.util.Set;
 
 @Controller
@@ -25,19 +24,20 @@ public class AdminController {
         this.userService = userServiceImpl;
         this.roleService = roleServiceImpl;
     }
-
+    @ModelAttribute("person")
+    public User getPerson() {
+        return new User();
+    }
     @GetMapping("")
     public String showAdminPage(Model model) {
         model.addAttribute("users", userService.getAllUsers());
-        return "adminPage";
+        return "admin";
     }
-
     @GetMapping("/add_user")
     public String showFormForAddUser(Model model) {
         model.addAttribute("user", new User());
         return "addUser";
     }
-
     @PostMapping("/add_user")
     public String addUser(@Valid @ModelAttribute("user") User user, BindingResult bindingResult, Model model,
                           @RequestParam("roles") Set<Integer> roleId) {
@@ -51,7 +51,6 @@ public class AdminController {
             return "redirect:/admin";
         }
     }
-
     @GetMapping(value = "/edit_user")
     public String getUserEditForm(@RequestParam("id") Integer id, Model model) {
         User user = userService.findUserById(id);
@@ -59,9 +58,8 @@ public class AdminController {
         model.addAttribute("roles", roleService.getAllRoles());
         return "editUser";
     }
-
     @PostMapping(value = "/{id}/edit_user")
-    public String updateUser(@Valid @ModelAttribute("user") User user, BindingResult bindingResult,
+    public String editUser(@Valid @ModelAttribute("user") User user, BindingResult bindingResult,
                              @RequestParam("roles") Set<Integer> roleIds, @PathVariable("id") Integer id) {
         if (bindingResult.hasErrors()) {
             return "editUser";
@@ -73,7 +71,6 @@ public class AdminController {
             return "redirect:/admin";
         }
     }
-
     @GetMapping("/delete_user")
     public String deleteUser(@RequestParam(name = "id") Integer id) {
         userService.removeUser(id);
