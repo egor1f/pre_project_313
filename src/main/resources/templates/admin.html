@@ -18,7 +18,13 @@
 <nav class="navbar navbar-expand-xl navbar-dark bg-dark">
     <div class="container-fluid">
 
-        <div class="navbar-brand" ><strong>user@mail.ru</strong> with role: #</div>
+        <div class="navbar-brand">
+            <a class="navbar-brand text-strong" th:if="${user != null}" th:object="${user}"
+               th:text="${user.getEmail()}"></a>
+            <a class="navbar-brand">with roles:</a>
+            <a class="navbar-brand" th:if="${user != null}" th:object="${user}" th:text="${user.getRoles()}"></a>
+        </div>
+
         <form class="d-flex" th:action="@{/logout}" th:method="POST">
             <button class="btn btn-outline-light">Logout</button>
         </form>
@@ -95,15 +101,22 @@
                                         <td th:text="${user.getRoles()}"></td>
 
                                         <td>
-                                            <button type="button" class="btn btn-info text-white"
-                                                    th:href="@{admin/edit_user (id=${user.getId()})}">Edit
-                                            </button>
+                                            <form id="editForm" name="editForm" th:action="@{/admin/edit_user/{id}(id=${user.id})}" method="GET">
+                                                <!--    Button trigger modal   -->
+                                                <button type="submit" class="btn btn-primary" data-toggle="modal" data-target="#editModal">
+                                                    Edit
+                                                </button>
+                                            </form>
                                         </td>
 
                                         <td>
-                                            <button type="button" class="btn btn-danger text-white"
-                                                    th:href="'/admin/delete_user?id=' + ${user.id}">Delete
-                                            </button>
+                                            <form name="deleteForm"
+                                                  th:action="@{/admin/delete_user/{id}(id=${user.id})}"
+                                                  method="GET">
+                                                <button type="submit"
+                                                        class="btn btn-danger">Delete
+                                                </button>
+                                            </form>
                                         </td>
                                     </tr>
                                     </tbody>
@@ -113,9 +126,9 @@
 
                         </div>
                         <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
-                            <form th:if="${users != null}"
+                            <form th:if="${user != null}"
                                   class="card"
-                                  th:action="@{/admin/add}"
+                                  th:action="@{/admin/add_user}"
                                   th:method="post"
                                   th:object="${user}">
 
@@ -127,7 +140,7 @@
                                         <div class="mb-3">
                                             <label for="InputFirstName" class="form-label tab"><b>First name</b></label>
                                             <input type="text" class="form-control" id="InputFirstName"
-                                                   placeholder="name"
+                                                   placeholder="first name"
                                                    th:class="${#fields.hasErrors('firstName')} ? 'class=form-control is-invalid' : 'class=form-control'"
                                                    th:field="*{firstName}">
                                             <label for="InputFirstName" th:errors="*{firstName}"
@@ -140,6 +153,7 @@
                                             <label for="InputLastName" class="form-label tab"><b>Last name</b></label>
                                             <input type="text" class="form-control" id="InputLastName"
                                                    placeholder="last name"
+                                                   th:class="${#fields.hasErrors('lastName')} ? 'class=form-control is-invalid' : 'class=form-control'"
                                                    th:field="*{lastName}">
                                             <label for="InputLastName" th:errors="*{lastName}"
                                                    th:if="${#fields.hasErrors('lastName')}"></label>
@@ -151,10 +165,10 @@
                                             <label for="InputAge" class="form-label tab"><b>Age</b></label>
                                             <input type="number" class="form-control" id="InputAge"
                                                    placeholder="age"
-                                                   th:class="${#fields.hasErrors('lastName')}? 'class= form-control is-invalid' : 'class= form-control'"
+                                                   th:class="${#fields.hasErrors('age')}? 'class= form-control is-invalid' : 'class= form-control'"
                                                    th:field="*{age}">
                                             <label for="InputAge" th:errors="*{age}"
-                                                   th:if="${#fields.hasErrors('lastName')}"></label>
+                                                   th:if="${#fields.hasErrors('age')}"></label>
                                         </div>
                                     </div>
 
@@ -185,7 +199,8 @@
                                                     <input class="form-check-input"
                                                            th:field="*{roles}"
                                                            th:value="${role.getId()}"
-                                                           type="checkbox">
+                                                           type="checkbox"
+                                                           name="roles">
                                                     <span th:text="${role.getName()}"></span>
                                                 </label>
                                             </div>
@@ -206,10 +221,112 @@
     </div>
 </div>
 
+<!--Модальное окно редактирования-->
+<div th:if="${editUser != null}" class="modal fade" id="editModal"
+     tabindex="-1" aria-labelledby="editModal" aria-hidden="true">
+    <div class="modal-dialog">
+        <form th:action="@{/admin/edit/{id}(id=${editUser.getId()})}"
+              th:method="POST"
+              th:object="${editUser}">
+            <div class="modal-content">
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js"
-            integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4"
-            crossorigin="anonymous"></script>
+                <div class="modal-header">
+                    <h1 id="editModalLabel"> Edit user</h1>
+                    <button type="button" class="btn-close"
+                            data-bs-dismiss="modal"
+                            aria-label="Close"></button>
+                </div>
+                <div class="modal-body mx-auto">
+
+                    <div class="form-floating mb-3">
+                        <input id="editModalName"
+                               placeholder="first name"
+                               th:class="${#fields.hasErrors('firstName')}? 'class= form-control is-invalid' : 'class= form-control'"
+                               th:field="*{firstName}">
+                        <label for="editModalName" th:if="${!#fields.hasErrors('firstName')}">First name</label>
+                        <label for="editModalName" th:errors="*{firstName}"
+                               th:if="${#fields.hasErrors('firstName')}"></label>
+                    </div>
+
+                    <div class="form-floating mb-3">
+                        <input id="editModalLastName"
+                               placeholder="last name"
+                               th:class="${#fields.hasErrors('lastName')}? 'class= form-control is-invalid' : 'class= form-control'"
+                               th:field="*{lastName}">
+                        <label for="editModalLastName" th:if="${!#fields.hasErrors('lastName')}">Last name</label>
+                        <label for="editModalLastName" th:errors="*{lastName}"
+                               th:if="${#fields.hasErrors('lastName')}"></label>
+                    </div>
+
+                    <div class="form-floating mb-3">
+                        <input class="form-control"
+                               id="editModalAge"
+                               type="number"
+                               placeholder="age"
+                               th:class="${#fields.hasErrors('age')}? 'class= form-control is-invalid' : 'class= form-control'"
+                               th:field="*{age}">
+                        <label for="editModalAge" th:if="${!#fields.hasErrors('age')}">Age</label>
+                        <label for="editModalAge" th:errors="*{age}"
+                               th:if="${#fields.hasErrors('age')}"></label>
+                    </div>
+
+                    <div class="form-floating mb-3">
+                        <div class="mb-3">
+                            <label for="editModalEmail" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="editModalEmail"
+                                   placeholder="name@example.com"
+                                   th:field="*{email}">
+                        </div>
+                    </div>
+
+                    <div class="form-floating mb-3">
+                        <input id="editModalPassword"
+                               placeholder="password"
+                               type="password"
+                               th:class="${#fields.hasErrors('password')}? 'class= form-control is-invalid' : 'class= form-control'"
+                               th:field="*{password}">
+                        <label for="editModalPassword" th:if="${!#fields.hasErrors('password')}">Password</label>
+                        <label for="editModalPassword" th:errors="*{password}"
+                               th:if="${#fields.hasErrors('password')}"></label>
+                    </div>
+
+                    <br>
+
+                    <div class="card mb-3">
+                        <div class="card-header">
+                            Roles
+                        </div>
+                        <div class="card-body">
+                            <div class="form-check">
+                                <label class="form-check-label d-block my-2" th:each="role: ${roles}">
+                                    <input class="form-check-input" th:field="*{roles}"
+                                           th:value="${role.getId()}"
+                                           type="checkbox">
+                                    <span th:text="${role.getName()}"></span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary"
+                            data-bs-dismiss="modal">Close
+                    </button>
+                    <button type="submit"
+                            class="btn btn-primary">Edit
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4"
+        crossorigin="anonymous"></script>
 
 </body>
 </html>
