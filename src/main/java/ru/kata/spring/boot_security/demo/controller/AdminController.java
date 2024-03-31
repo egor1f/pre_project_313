@@ -15,6 +15,7 @@ import ru.kata.spring.boot_security.demo.service.UserServiceImpl;
 import javax.validation.Valid;
 import java.security.Principal;
 import java.util.Set;
+
 @Controller
 @RequestMapping("/admin")
 public class AdminController {
@@ -37,16 +38,14 @@ public class AdminController {
         model.addAttribute("roles", roleService.getAllRoles());
         return "/admin";
     }
-    @GetMapping("/edit_user/{id}")
-    public String showFormForEditUser(@PathVariable("id") int id, Model model) {
+
+    @PostMapping("/edit_user/{id}")
+    public String showFormForEditUser(@Valid @ModelAttribute("editUser") User user, BindingResult bindingResult,
+                                      @RequestParam("roles") Set<Integer> roleIds,
+                                      @PathVariable("id") Integer id, Model model) {
         model.addAttribute("editUser", userService.findUserById(id));
         model.addAttribute("users", userService.getAllUsers());
         model.addAttribute("roles", roleService.getAllRoles());
-        return "/admin";
-    }
-    @PostMapping("/edit_user/{id}")
-    public String editUser(@Valid @ModelAttribute("editUser") User user, BindingResult bindingResult,
-                           @RequestParam("roles") Set<Integer> roleIds, @PathVariable("id") Integer id) {
         if (bindingResult.hasErrors()) {
             return redirect;
         } else {
@@ -57,25 +56,24 @@ public class AdminController {
             return "redirect:/admin/";
         }
     }
-    @GetMapping("/delete_user/{id}")
+
+    @PostMapping("/delete_user/{id}")
     public String deleteUser(@PathVariable("id") int id,
                              @ModelAttribute("deleteUser") User deleteUser, Model model) {
         model.addAttribute("users", userService.getAllUsers());
-        model.addAttribute("deleteUser", userService.findUserById(id));
-        return "/admin";
-    }
-    @PostMapping("/delete_user")
-    public String deleteUser(@RequestParam(name = "id") Integer id) {
+        model.addAttribute("user", userService.findUserById(id));
         userService.removeUser(id);
         return "redirect:/admin/";
     }
+
     @GetMapping("/add_user")
-    public String showFormForAddUser(@ModelAttribute("user") User User, Model model) {
-        model.addAttribute("user", new User());
+    public String showFormForAddUser(@ModelAttribute("addUser") User User, Model model) {
+        model.addAttribute("addUser", new User());
         return "/admin";
     }
+
     @PostMapping("/add_user")
-    public String addUser(@ModelAttribute("user") @Valid User user, BindingResult bindingResult, Model model,
+    public String addUser(@ModelAttribute("addUser") @Valid User user, BindingResult bindingResult, Model model,
                           @RequestParam("roles") Set<Integer> roleId) {
         if (bindingResult.hasErrors()) {
             return redirect;
@@ -83,7 +81,7 @@ public class AdminController {
             Set<Role> roles = roleService.findDyIds(roleId);
             user.setRoles(roles);
             userService.addUser(user);
-            model.addAttribute("user", user);
+            model.addAttribute("addUser", user);
             return "redirect:/admin/";
         }
     }
