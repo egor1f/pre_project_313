@@ -24,8 +24,8 @@
             <a class="navbar-brand" th:if="${user != null}" th:object="${user}" th:text="${user.getRoles()}"></a>
         </div>
 
-        <form class="d-flex" th:action="@{/logout}" th:method="POST">
-            <button class="btn btn-outline-light">Logout</button>
+        <form class="d-flex" th:action="@{/admin/logout}" method="post">
+            <button type="submit" class="btn btn-outline-light">Logout</button>
         </form>
 
     </div>
@@ -237,47 +237,57 @@
                 <div class="modal-body mx-auto">
 
                     <div class="mb-3">
-                        <label for="firstNameDelete"
+                        <label for="firstNameEdit"
                                class="col-form-label"><b>First name</b></label>
                         <input type="text"
-                               th:value="${user.getFirstName()}" name="firstName"
-                               class="form-control" id="firstNameDelete"
-                               readonly/>
+                               th:value="${user.getFirstName}" name="firstName"
+                               class="form-control" id="firstNameEdit"
+                               required minlength="2" maxlength="20"/>
                     </div>
                     <div class="mb-3">
-                        <label for="lastnameDelete"
+                        <label for="lastNameEdit"
                                class="col-form-label"><b>Last name</b></label>
                         <input type="text"
-                               th:value="${user.getLastName}"
-                               name="lastName"
-                               class="form-control" id="lastNameDelete"
-                               readonly/>
+                               th:value="${user.getLastName}" name="lastName"
+                               class="form-control" id="lastNameEdit"
+                               required minlength="2" maxlength="20"/>
                     </div>
                     <div class="mb-3">
-                        <label for="ageDelete"
+                        <label for="ageEdit"
                                class="col-form-label"><b>Age</b></label>
                         <input type="text"
                                th:value="${user.getAge}" name="age"
-                               class="form-control" id="ageDelete"
-                               readonly/>
+                               class="form-control" id="ageEdit"
+                               required minlength="2" maxlength="20"/>
                     </div>
                     <div class="mb-3">
-                        <label for="emailDelete"
+                        <label for="emailEdit"
                                class="col-form-label"><b>Email</b></label>
                         <input type="text"
                                th:value="${user.getEmail()}"
                                name="email"
-                               class="form-control" id="emailDelete"
-                               readonly/>
+                               class="form-control" id="emailEdit"
+                               required minlength="2" maxlength="20"/>
                     </div>
                     <div class="mb-3">
-                        <label for="roleDelete"
-                               class="col-form-label"><b>Role</b></label>
-                        <input type="text"
-                               th:value="${user.getRoles()}"
-                               name="name_role"
-                               class="form-control" id="roleDelete"
-                               readonly/>
+                        <label for="passwordEdit"
+                               class="col-form-label"><b>Password</b></label>
+                        <input type="password"
+                               th:value="${user.getPassword}"
+                               name="password"
+                               class="form-control" id="passwordEdit"
+                               required minlength="2" maxlength="20"/>
+                    </div>
+                    <div class="mb-3">
+                        <label class="container-fluid "
+                               for="roleUpdate"><b>Role</b></label>
+                        <select id="roleUpdate" name="roles"
+                                size="2" multiple="multiple" required>
+                            <option th:each="role : ${roles}"
+                                    th:value="${role.id}"
+                                    th:text="${role.name}">Role name
+                            </option>
+                        </select>
                     </div>
                 </div>
 
